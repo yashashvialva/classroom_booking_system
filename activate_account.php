@@ -1,24 +1,22 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors',1);
 include('includes/db_connect.php');
 
-if(isset($_POST['activate'])){
+if (isset($_POST['activate'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+    $confirm = $_POST['confirm_password'];
 
-    if($password !== $confirm_password){
-        $error = "Passwords do not match!";
+    if ($password != $confirm) {
+        $msg = "<p class='error'>Passwords do not match!</p>";
     } else {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE users SET password=?, is_active=1 WHERE email=? AND is_active=0");
-        $stmt->bind_param("ss", $hash, $email);
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "UPDATE users SET password='$hashed', is_active=1 WHERE email='$email' AND is_active=0";
+        $conn->query($sql);
 
-        if($stmt->execute() && $stmt->affected_rows > 0){
-            $success = "Account activated! You can now log in.";
+        if ($conn->affected_rows > 0) {
+            $msg = "<p class='success'>Account activated! You can now <a href='login.php'>login</a>.</p>";
         } else {
-            $error = "Invalid email or account already activated.";
+            $msg = "<p class='error'>Invalid email or account already activated.</p>";
         }
     }
 }
@@ -30,108 +28,48 @@ if(isset($_POST['activate'])){
     <title>Activate Account</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            font-family: Arial;
+            background: black;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0;
         }
-
-        .activate-container {
-            background-color: #fff;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            width: 400px;
+        .box {
+            background: #ecf819ff; padding: 40px; border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 400px;
         }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+        h2 { text-align: center; }
+        input {
+            width: 100%; padding: 10px; margin: 8px 0;
+            border: 1px solid #ccc; border-radius: 5px;
         }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+        button {
+            width: 100%; background: #ff9d00ff; color: white;
+            border: none; padding: 10px; border-radius: 5px;
+            font-size: 16px; cursor: pointer;
         }
-
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px 12px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        .message {
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .message.error { color: red; }
-        .message.success { color: green; }
-
-        .link {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .link a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
+        button:hover { background: #ff9811ff; }
+        .msg { text-align: center; margin-bottom: 10px; }
+        .error { color: red; }
+        .success { color: green; }
+        a { color: #ff7300ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <div class="activate-container">
+    <div class="box">
         <h2>Activate Your Account</h2>
-        <?php 
-        if(isset($error)) echo "<p class='message error'>$error</p>"; 
-        if(isset($success)) echo "<p class='message success'>$success</p>"; 
-        ?>
+        <div class="msg"><?= $msg ?? '' ?></div>
+
         <form method="POST">
-            <label>Email:</label>
-            <input type="email" name="email" placeholder="Enter your email" required>
-
-            <label>Password:</label>
+            <input type="email" name="email" placeholder="Enter email" required>
             <input type="password" name="password" placeholder="Enter password" required>
-
-            <label>Confirm Password:</label>
             <input type="password" name="confirm_password" placeholder="Confirm password" required>
-
-            <input type="submit" name="activate" value="Activate">
+            <button type="submit" name="activate">Activate</button>
         </form>
-        <div class="link">
-            <p>Already activated? <a href="login.php">Login here</a></p>
-        </div>
+
+        <p style="text-align:center; margin-top:15px;">
+            Already activated? <a href="login.php">Login here</a>
+        </p>
     </div>
 </body>
 </html>

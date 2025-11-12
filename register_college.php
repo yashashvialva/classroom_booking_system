@@ -11,7 +11,7 @@ include('includes/db_connect.php');
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,7 +20,7 @@ include('includes/db_connect.php');
         }
 
         .register-container {
-            background-color: #fff;
+            background-color: #e2ff27ff;
             padding: 40px 50px;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -52,7 +52,7 @@ include('includes/db_connect.php');
         input[type="submit"] {
             width: 100%;
             padding: 12px;
-            background-color: #4CAF50;
+            background-color: #ffa200ff;
             color: white;
             border: none;
             border-radius: 8px;
@@ -62,7 +62,7 @@ include('includes/db_connect.php');
         }
 
         input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #11ff8cff;
         }
 
         .message {
@@ -80,13 +80,9 @@ include('includes/db_connect.php');
         }
 
         .link a {
-            color: #4CAF50;
+            color: #5043e0ff;
             text-decoration: none;
             font-weight: bold;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
@@ -100,22 +96,14 @@ include('includes/db_connect.php');
 
             if(isset($_FILES['csv']) && $_FILES['csv']['error'] == 0){
                 $file = $_FILES['csv']['tmp_name'];
-
-                // Insert college
-                $stmt_college = $conn->prepare("INSERT INTO colleges (college_name) VALUES (?)");
-                $stmt_college->bind_param("s", $college_name);
-                if(!$stmt_college->execute()){
-                    echo "<p class='message error'>Error inserting college: " . $stmt_college->error . "</p>";
-                } else {
-                    $college_id = $stmt_college->insert_id;
-                    $stmt_college->close();
+                $sql_college = "INSERT INTO colleges (college_name) VALUES ('$college_name')";
+                if(mysqli_query($conn, $sql_college)){
+                    $college_id = mysqli_insert_id($conn);
                     echo "<p class='message success'>College inserted with ID: $college_id</p>";
 
                     // Insert users from CSV
                     if(($handle = fopen($file, "r")) !== FALSE){
                         fgetcsv($handle); // skip header
-                        $stmt_user = $conn->prepare("INSERT INTO users (name,email,password,role,college_id) VALUES (?,?,?,?,?)");
-
                         $row = 1;
                         while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
                             $name = $data[0];
@@ -123,23 +111,23 @@ include('includes/db_connect.php');
                             $role = $data[2];
                             $password = password_hash("12345", PASSWORD_DEFAULT);
 
-                            $stmt_user->bind_param("ssssi", $name, $email, $password, $role, $college_id);
-                            if($stmt_user->execute()){
+                            $sql_user = "INSERT INTO users (name,email,password,role,college_id)
+                                         VALUES ('$name','$email','$password','$role','$college_id')";
+                            if(mysqli_query($conn, $sql_user)){
                                 echo "<p>Row $row inserted: Name=$name, Email=$email, Role=$role</p>";
                             } else {
-                                echo "<p class='message error'>Error inserting user $name: " . $stmt_user->error . "</p>";
+                                echo "<p class='message error'>Error inserting user $name: " . mysqli_error($conn) . "</p>";
                             }
                             $row++;
                         }
-
-                        $stmt_user->close();
                         fclose($handle);
                         echo "<p class='message success'>All users processed successfully!</p>";
                     } else {
                         echo "<p class='message error'>Cannot open CSV file.</p>";
                     }
+                } else {
+                    echo "<p class='message error'>Error inserting college: " . mysqli_error($conn) . "</p>";
                 }
-
             } else {
                 echo "<p class='message error'>CSV file upload failed!</p>";
             }
@@ -157,7 +145,7 @@ include('includes/db_connect.php');
         </form>
 
         <div class="link">
-            <p><a href="index.php">Back to Home</a></p>
+            <p><a href="home.php">Back to Home</a></p>
         </div>
     </div>
 </body>

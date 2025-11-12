@@ -7,32 +7,42 @@ include('includes/db_connect.php');
 if(isset($_POST['login'])){
     $email = $_POST['email'];
     $password = $_POST['password'];
+// Fetch user from database
+    $sql = "SELECT id, password, role, is_active FROM users WHERE email='$email'";
+    $result = mysqli_query($conn, $sql);
 
-    $stmt = $conn->prepare("SELECT id, password, role, is_active FROM users WHERE email=?");
-    $stmt->bind_param("s",$email);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id,$hashed_password,$role,$is_active);
-    $stmt->fetch();
+    if(mysqli_num_rows($result) > 0){
+        $row = mysqli_fetch_assoc($result);
+        $id = $row['id'];
+        $hashed_password = $row['password'];
+        $role = $row['role'];
+        $is_active = $row['is_active'];
 
-    if($stmt->num_rows > 0 && password_verify($password, $hashed_password)){
-        if($is_active == 0){
-            $error = "Please activate your account first!";
+        // Verify password
+        if(password_verify($password, $hashed_password)){
+            if($is_active == 0){
+                $error = "Please activate your account first!";
+            } else {
+                $_SESSION['user_id'] = $id;
+                $_SESSION['role'] = $role;
+
+                if($role == 'admin'){
+                    header("Location: dashboard/admin_dashboard.php");
+                } elseif($role == 'faculty'){
+                    header("Location: dashboard/faculty_dashboard.php");
+                } else {
+                    header("Location: dashboard/student_dashboard.php");
+                }
+                exit;
+            }
         } else {
-            $_SESSION['user_id'] = $id;
-            $_SESSION['role'] = $role;
-
-            if($role=='admin') header("Location: dashboard/admin_dashboard.php");
-            elseif($role=='faculty') header("Location: dashboard/faculty_dashboard.php");
-            else header("Location: dashboard/student_dashboard.php");
-            exit;
+            $error = "Invalid email or password!";
         }
     } else {
         $error = "Invalid email or password!";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,16 +50,21 @@ if(isset($_POST['login'])){
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: #000000ff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
         .login-container {
-            background-color: #fff;
+            background-color: #f2ff00ff;
             padding: 40px 50px;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -81,17 +96,15 @@ if(isset($_POST['login'])){
         input[type="submit"] {
             width: 100%;
             padding: 12px;
-            background-color: #4CAF50;
+            background-color: #ff8800ff;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 18px;
-            cursor: pointer;
-            transition: background 0.3s;
         }
 
         input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #ffab02ff;
         }
 
         .error {
@@ -106,7 +119,7 @@ if(isset($_POST['login'])){
         }
 
         .link a {
-            color: #4CAF50;
+            color: #ff7707ff;
             text-decoration: none;
             font-weight: bold;
         }
@@ -135,3 +148,4 @@ if(isset($_POST['login'])){
     </div>
 </body>
 </html>
+ 

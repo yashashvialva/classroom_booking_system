@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f2f2f2;
+            background:BLACK;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -14,7 +14,7 @@
         }
 
         .container {
-            background: #fff;
+            background:YELLOW;
             padding: 40px 60px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -37,30 +37,17 @@
             border-radius: 8px;
             cursor: pointer;
             color: #fff;
-            background-color: #007BFF;
-            transition: background-color 0.3s;
-            text-decoration: none;
+            background-color: #ff9900ff;
+            color: #333
+           
         }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .register-btn {
-            background-color: #28a745;
-        }
-
-        .register-btn:hover {
-            background-color: #1e7e34;
-        }
-
         .signup-btn {
-            background-color: #ffc107;
+            background-color: #ff9900ff;
             color: #333;
         }
 
         .signup-btn:hover {
-            background-color: #e0a800;
+            background-color: #e0a800;color: #333
         }
     </style>
 </head>
