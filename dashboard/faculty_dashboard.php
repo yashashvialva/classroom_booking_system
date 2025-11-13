@@ -48,7 +48,7 @@ $classroom_result = mysqli_query($conn, $classroom_query) or die("Classroom fetc
             width: 95%;
             margin: 20px auto;
         }
-        h2, h3 { color: #ffe600ff; }
+       h1, h2, h3 { color: #ffe600ff; }
     .msg {
             padding: 10px;
             margin-bottom: 15px;
@@ -103,15 +103,36 @@ $classroom_result = mysqli_query($conn, $classroom_query) or die("Classroom fetc
         }
     .logout:hover { background-color: #ffff17ff; }
     .status-text { display:block; font-size:12px; color:#fff; margin:2px 0; }
+     .mascot-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .mascot-header h3 {
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .mascot-header img {
+            width: 200px;
+            height: auto;
+            
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h2>Welcome Faculty <a class="logout" href="../home.php">Logout</a></h2>
-
+        
     <?php if (isset($msg)) echo "<div class='msg'>$msg</div>"; ?>
 
-    <h3>Available Classrooms / Labs</h3>
+    <div class="mascot-header">
+        <h1>Add Classroom or Lab</h1>
+        <img src="image.png" alt="Student Mascot">
+    </div>
     <table>
         <tr>
             <th>ID</th>

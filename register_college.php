@@ -10,6 +10,7 @@ include('includes/db_connect.php');
     <title>Register College</title>
     <style>
         body {
+            background-image:url('image.png');
             font-family: Arial, sans-serif;
             background-color: black;
             display: flex;

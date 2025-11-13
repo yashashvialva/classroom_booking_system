@@ -28,8 +28,9 @@ if (isset($_POST['activate'])) {
     <title>Activate Account</title>
     <style>
         body {
+            background-image:url('image.png');
             font-family: Arial;
-            background: black;
+            
             display: flex; justify-content: center; align-items: center;
             height: 100vh; margin: 0;
         }

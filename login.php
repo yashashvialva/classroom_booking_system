@@ -49,6 +49,7 @@ if(isset($_POST['login'])){
     <title>Login</title>
     <style>
         body {
+            background-image:url('image.png');
             font-family: Arial, sans-serif;
             background-color: #000000ff;
             display: flex;

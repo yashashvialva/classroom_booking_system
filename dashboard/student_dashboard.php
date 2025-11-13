@@ -34,70 +34,145 @@ $classrooms = $conn->query("SELECT * FROM classrooms WHERE college_id=$college_i
     <title>Student Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: black;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121212; /* Deep dark gray */
+            color: #e0e0e0; /* Soft white text */
             margin: 0;
             padding: 0;
         }
+
         .container {
             width: 95%;
             margin: 20px auto;
         }
-        h2, h3 { color: #ffe600ff; }
+
+        h2, h3,h1 {
+            color: #ffcc66;
+        }
+
         .msg {
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 6px;
-            background-color: #ddff03ff;
-            color: #155724;
+            background-color: #1f3b1f;
+            color: #b7ffb7;
+            border: 1px solid #2ecc71;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
         }
+
         th, td {
             padding: 12px 15px;
             text-align: center;
-            border-bottom: 1px solid #fde006ff;
-            color: #ffe600;
+            border-bottom: 1px solid #333;
         }
-        th { background-color: black; }
-        tr:hover { background-color: #ffe60033; }
-        form { 
-            background-color: black; 
-            padding: 15px; 
-            border-radius: 10px; 
-            box-shadow: 0 0 12px rgba(0,0,0,0.05); 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 5px; 
+
+        th {
+            background-color: #2a2a2a;
+            color: #ffd966;
+        }
+
+        tr:hover {
+            background-color: #2f2f2f;
+        }
+
+        .status-text {
+            display: block;
+            font-size: 12px;
+            margin: 2px 0;
+            color: #bfbfbf;
+        }
+
+        form {
+            background-color: #1b1b1b;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
             justify-content: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
         }
+
         input, select, button {
             padding: 8px;
             border-radius: 6px;
-            border: 1px solid yellow;
+            border: 1px solid #555;
+            background-color: #2b2b2b;
+            color: #f1f1f1;
             font-size: 14px;
         }
-        button {
-            background-color: orange;
-            color: black;
-            border: none;
-            cursor: pointer;
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ffcc66;
+            box-shadow: 0 0 5px #ffcc66;
         }
-        button:hover { background-color: #ffbf00; }
-        a { text-decoration: none; color: #007BFF; }
-        a:hover { text-decoration: underline; }
+
+        button {
+            background-color: #ffcc66;
+            color: #1a1a1a;
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #ffd77a;
+            transform: scale(1.03);
+        }
+
+        a {
+            text-decoration: none;
+            color: #66b3ff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
         .logout {
             float: right;
-            background-color: #cad70fff;
+            background-color: #ff6666;
             color: white;
             padding: 8px 12px;
             border-radius: 6px;
+            transition: 0.3s;
         }
-        .logout:hover { background-color: #ffff17ff; }
-        .status-text { display:block; font-size:12px; margin:2px 0; }
+
+        .logout:hover {
+            background-color: #ff8585;
+        }
+
+        /* Header (title + mascot image side by side) */
+        .mascot-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .mascot-header h3 {
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .mascot-header img {
+            width: 200px;
+            height: auto;
+            
+        }
+
+        
+
     </style>
 </head>
 <body>
@@ -106,7 +181,12 @@ $classrooms = $conn->query("SELECT * FROM classrooms WHERE college_id=$college_i
 
     <?php if (isset($msg)) echo "<div class='msg'>$msg</div>"; ?>
 
-    <h3>Available Classrooms / Labs</h3>
+    <!-- Header: Title + Image Side by Side -->
+    <div class="mascot-header">
+        <h1>Available Classrooms /Labs</h1>
+        <img src="imagestudent.png" alt="Student Mascot">
+    </div>
+
     <table>
         <tr>
             <th>ID</th>
@@ -132,22 +212,19 @@ $classrooms = $conn->query("SELECT * FROM classrooms WHERE college_id=$college_i
             }
             ?>
             <tr>
-            <td><?= $row['id'] ?></td>
-            <td><?= $row['room_name'] ?></td>
-            <td><?= $row['type'] ?></td>
-            <td><?= $status_text ?></td>
-            <td>
-                <form method="POST">
-                    <input type="hidden" name="classroom_id" value="<?= $row['id'] ?>">
-                    <input type="date" name="date" required>
-                    <input type="time" name="start_time" required>
-                    <input type="time" name="end_time" required>
-                    <input type="text" name="reason" placeholder="Why book?" required>
-                    <button type="submit" name="book">Book</button>
-        </form>
-</td>
- 
-        </form>
+                <td><?= $row['id'] ?></td>
+                <td><?= $row['room_name'] ?></td>
+                <td><?= $row['type'] ?></td>
+                <td><?= $status_text ?></td>
+                <td>
+                    <form method="POST">
+                        <input type="hidden" name="classroom_id" value="<?= $row['id'] ?>">
+                        <input type="date" name="date" required>
+                        <input type="time" name="start_time" required>
+                        <input type="time" name="end_time" required>
+                        <input type="text" name="reason" placeholder="Why book?" required>
+                        <button type="submit" name="book">Book</button>
+                    </form>
                 </td>
             </tr>
         <?php endwhile; ?>

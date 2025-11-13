@@ -6,6 +6,7 @@
         body {
             font-family: Arial, sans-serif;
             background:BLACK;
+            background-image:url('image.png');
             display: flex;
             justify-content: center;
             align-items: center;
@@ -14,7 +15,8 @@
         }
 
         .container {
-            background:YELLOW;
+            background: #f7fa54ff;
+            transparency:0.9;
             padding: 40px 60px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);

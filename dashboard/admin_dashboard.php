@@ -63,60 +63,158 @@ $bookings = mysqli_query($conn, $booking_query) or die("Booking fetch failed!");
 <head>
     <title>Admin Dashboard</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: black;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 95%;
-            margin: 20px auto;
-        }
-        h2, h3 { color: #ffe600ff; }
-        .msg {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-        }
-        .msg.success { background-color: #ddff03ff; color: #155724; }
-        .msg.error { background-color: #f8d7da; color: #721c24; }
-        form {
-            margin-bottom: 30px;
-            background-color: black;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.05);
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 1px solid #fde006ff;
-            color: white;
-        }
-        th { background-color: black; color:#ffe600; }
-        tr:hover { background-color: #ffe60033; }
-        a { text-decoration: none; color: #007BFF; }
-        a:hover { text-decoration: underline; }
-        .actions a { margin: 0 5px; font-weight: bold; }
-        .logout {
-            float: right;
-            background-color: #cad70fff;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-        }
-        .logout:hover { background-color: #ffff17ff; }
-        hr { margin: 30px 0; border: none; border-top: 1px solid #ccc; }
-    </style>
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: #121212;
+        color: #e0e0e0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 95%;
+        margin: 20px auto;
+    }
+
+    h1, h2, h3 {
+        color: #ffcc66;
+    }
+
+    .msg {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        background-color: #1f3b1f;
+        color: #b7ffb7;
+        border: 1px solid #2ecc71;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #333;
+    }
+
+    th {
+        background-color: #2a2a2a;
+        color: #ffd966;
+    }
+
+    tr:hover {
+        background-color: #2f2f2f;
+    }
+
+    form {
+        background-color: #1b1b1b;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+    }
+
+    input[type="text"], select {
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #555;
+        background-color: #2b2b2b;
+        color: #f1f1f1;
+        font-size: 14px;
+    }
+
+    input[type="text"]:focus, select:focus {
+        outline: none;
+        border-color: #ffcc66;
+        box-shadow: 0 0 5px #ffcc66;
+    }
+
+    input[type="submit"] {
+        background-color: #ffcc66;
+        color: #1a1a1a;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #ffd77a;
+        transform: scale(1.03);
+    }
+
+    a {
+        text-decoration: none;
+        color: #66b3ff;
+        font-weight: bold;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .actions a {
+        margin: 0 5px;
+    }
+
+    .logout {
+        float: right;
+        background-color: #ff6666;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: 0.3s;
+    }
+
+    .logout:hover {
+        background-color: #ff8585;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #333;
+        margin: 40px 0;
+    }
+
+    /* Header with optional image */
+    .mascot-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .mascot-header img {
+        width: 220px;
+        height: auto;
+    }
+</style>
+
 </head>
 <body>
 <div class="container">
     <h2>Welcome, Admin <a class="logout" href="../home.php">Logout</a></h2>
 
     <?php if (isset($msg)) echo "<div class='msg success'>$msg</div>"; ?>
-
-    <h3>Add Classroom or Lab</h3>
+    <div class="mascot-header">
+        <h1>Add Classroom or Lab</h1>
+        <img src="imageadmin.png" alt="Student Mascot">
+    </div>
+    
     <form method="POST">
         <label>Room Name:</label>
         <input type="text" name="room_name" placeholder="Enter classroom/lab name"
